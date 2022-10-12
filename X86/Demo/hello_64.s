@@ -1,17 +1,21 @@
-	.file	"sum.c"
+	.file	"hello.c"
 	.text
-	.p2align 4
-	.globl	sum
-	.type	sum, @function
-sum:
-.LFB0:
-	.cfi_startproc
+	.section	.rodata.str1.1,"aMS",@progbits,1
+.LC0:
+	.string	"hello world"
+	.text
+	.globl	main
+	.type	main, @function
+main:
 	endbr64
-	leal	(%rdi,%rsi), %eax
+	pushq	%rbp
+	movq	%rsp, %rbp
+	movl	$.LC0, %edi
+	call	puts
+	movl	$0, %eax
+	popq	%rbp
 	ret
-	.cfi_endproc
-.LFE0:
-	.size	sum, .-sum
+	.size	main, .-main
 	.ident	"GCC: (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0"
 	.section	.note.GNU-stack,"",@progbits
 	.section	.note.gnu.property,"a"

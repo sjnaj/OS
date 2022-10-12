@@ -1,20 +1,22 @@
-	.file	"struct.c"
+	.file	"hello.c"
+	.intel_syntax noprefix
 	.text
-	.globl	get_j
-	.type	get_j, @function
-get_j:
-.LFB0:
-	.cfi_startproc
+	.section	.rodata.str1.1,"aMS",@progbits,1
+.LC0:
+	.string	"hello world"
+	.text
+	.globl	main
+	.type	main, @function
+main:
 	endbr64
-	movslq	%edi, %rdi
-	leaq	(%rdi,%rdi,2), %rdx
-	leaq	a(%rip), %rax
-	movswl	8(%rax,%rdx,4), %eax
+	push	rbp
+	mov	rbp, rsp
+	mov	edi, OFFSET FLAT:.LC0
+	call	puts
+	mov	eax, 0
+	pop	rbp
 	ret
-	.cfi_endproc
-.LFE0:
-	.size	get_j, .-get_j
-	.comm	a,120,32
+	.size	main, .-main
 	.ident	"GCC: (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0"
 	.section	.note.GNU-stack,"",@progbits
 	.section	.note.gnu.property,"a"
