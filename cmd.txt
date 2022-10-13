@@ -1,1 +1,19 @@
 tldr:简化的--help
+
+gdbtui demo -q
+
+    layout split
+    layout asm
+    x/10 $esp-0x10
+    ni
+    i r
+
+name=xx;
+as --32 -o  $name.o $name.s;ld -s  -m elf_i386 -o $name $name.o
+./$name
+as  -o  $name.o $name.s;ld -s -o $name $name.o ;./$name
+
+gcc会链接一些库文件，反汇编才能看到全部代码
+
+ld -m elf_i386 -dynamic-linker /lib32/ld-linux.so.2 /lib32/libc-2.31.so cpuid.o -o cpuid  #32位链接libc
+ld -lc -dynamic-linker /lib64/ld-linux-x86-64.so.2  -o cpuid64 cpuid64.o

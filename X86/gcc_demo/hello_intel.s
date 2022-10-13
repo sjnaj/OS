@@ -1,19 +1,21 @@
 	.file	"hello.c"
+	.intel_syntax noprefix
 	.text
 	.section	.rodata.str1.1,"aMS",@progbits,1
 .LC0:
 	.string	"hello world"
-	.text
+	.section	.text.startup,"ax",@progbits
+	.p2align 4
 	.globl	main
 	.type	main, @function
 main:
 	endbr64
-	pushq	%rbp
-	movq	%rsp, %rbp
-	movl	$.LC0, %edi
-	call	puts
-	movl	$0, %eax
-	popq	%rbp
+	push	rbp
+	lea	rdi, .LC0[rip]
+	mov	rbp, rsp
+	call	puts@PLT
+	xor	eax, eax
+	pop	rbp
 	ret
 	.size	main, .-main
 	.ident	"GCC: (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0"
