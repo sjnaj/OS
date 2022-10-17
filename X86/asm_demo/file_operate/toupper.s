@@ -89,7 +89,7 @@ read_loop_begin:
 continue_read_loop:
     
     pushl $BUFFER_DATA#loc of buffer
-    pushl %eax#size of buffer
+    pushl %eax#size of data
 
     call convert_to_upper
     popl %eax

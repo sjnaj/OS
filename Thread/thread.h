@@ -1,0 +1,43 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdatomic.h>
+#include <assert.h>
+#include <unistd.h>
+#include <pthread.h>
+#define NTHREAD 6400
+enum{T_FREE=0,T_LIVE,T_DEAD};
+struct thread
+{
+    int id,status;
+    pthread_t thread;
+    void(*entry)(int);
+};
+struct thread tpool[NTHREAD],*tptr=tpool;//tptr与数组下标同作用
+
+void *warpper(void *arg){
+    struct thread *thread =(struct thread*)arg;
+    thread->entry(thread->id);
+    return NULL;
+}
+void create(void*fn){
+    assert(tptr-tpool<NTHREAD);
+    *tptr=(struct thread){
+        .id=tptr-tpool+1,
+        .status=T_LIVE,
+        .entry=(void (*)(int))fn,
+    };
+    pthread_create(&(tptr->thread),NULL,warpper,tptr);
+    ++tptr;
+}
+void join(){
+    for(size_t i=0;i<NTHREAD;i++){
+        struct thread*t=&tpool[i];
+        if(t->status==T_LIVE){
+            pthread_join(t->thread,NULL);
+            t->status=T_DEAD;
+        }
+    }
+}
+__attribute__((destructor))void cleanup(){
+    join();
+}
